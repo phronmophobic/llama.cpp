@@ -7,6 +7,10 @@
 
 #import <Metal/Metal.h>
 
+#if GGML_METAL_EMBED_LIBRARY
+#include "ggml-metal-shader.h"
+#endif
+
 #undef MIN
 #undef MAX
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -280,10 +284,11 @@ static struct ggml_metal_context * ggml_metal_init(int n_cb) {
 #if GGML_METAL_EMBED_LIBRARY
             GGML_METAL_LOG_INFO("%s: using embedded metal library\n", __func__);
 
-            extern const char ggml_metallib_start[];
-            extern const char ggml_metallib_end[];
+            // extern const char ggml_metallib_start[];
+            // extern const char ggml_metallib_end[];
+            
 
-            NSString * src  = [[NSString alloc] initWithBytes:ggml_metallib_start length:(ggml_metallib_end-ggml_metallib_start) encoding:NSUTF8StringEncoding];
+            NSString * src  = [[NSString alloc] initWithBytes:ggml_metal_metal length:ggml_metal_metal_len encoding:NSUTF8StringEncoding];
 #else
             GGML_METAL_LOG_INFO("%s: default.metallib not found, loading from source\n", __func__);
 
